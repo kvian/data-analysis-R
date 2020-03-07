@@ -1,0 +1,41 @@
+Q:What is the structure of your dataset?
+ANS:There are 1599 observations with 13 variables in the dataset. There are features like 
+    (fixed.acidity,volatile.acidity,citric acid,density, pH, alcohol, sulphate content and quality).
+    All the variables here are of numeric type except quality which of integer type. 
+
+Q:Few observations about the data?
+ANS:Most of the wines are of average quality.
+    This dataset contains data about only a sample of red wines.
+    It can be seen that pH , Density are normally distributed.
+    Looking at variables like alcohol content, fixed acidity, volatile acidity, 
+    residual sugar content,sulphur dioxide and chloride content are positively skewed.
+
+Q:What is/are the main feature(s) of interest in your dataset?
+ANS:The main feature of interest for this dataset is the wine quality. 
+    I want to find out what all variables impact the wine quality.
+    From the above univariate analysis I think that pH,sulphates contet and alcohol directly
+    impact the quality of the wines. 
+   
+Q:What other features in the dataset do you think will help support your investigation into your 
+   feature(s) of interest?
+ANS:Apart from pH, sulpahates and alcohol content which play a major role in determining the
+    quality of red wine. Variables like acidity(fixed and volatile) and sugar content can also
+    play an important role in predicting the quality rating.
+    I can say this by looking at the similarity of distribution of quality and 
+    acidity(fixed and volatile) ,residual sugar content.
+
+
+Q:Did you create any new variables from existing variables in the dataset?
+ANS:Yes, I have added one variable to the dataset with the quality_category which has 3 categories
+    Low, Medium and Good.
+    I have split the wine quality based on the below condition:
+    If the quality ratings is less than 4 then its bad quality , 
+    it its between 5 and 6 then Medium else Good quality.
+
+
+Q:Of the features you investigated, were there any unusual distributions? 
+  Did you perform any operations on the data to tidy, adjust, or change the form of the data? 
+  If so, why did you do this?
+ANS:There were few variables like fixed acidity , colatile acidity , residual sugar content which
+     were marginally right skewed. 
+    I haven't done any specific transformations to the data apart from adding a new variable.

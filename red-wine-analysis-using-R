@@ -1,0 +1,244 @@
+library (ggplot2)
+library(dplyr)
+library (gridExtra)
+library (RColorBrewer)
+library (caret)
+library(tidyverse)
+
+#read the data from the csv file
+red_df<- read.csv('wineQualityReds.csv')
+#get the number of columns and rows in the dataframe
+dim(red_df)
+#Columnnames of the data frame
+names(red_df)
+
+#Get the structure of the data frame
+str(red_df)
+#Get the summary of the data frame
+summary(red_df)
+
+#Number of wines per quality ratings
+ggplot(red_df,aes(x=quality))+
+  geom_bar(stat="count",fill= "red",colour = "black")+
+  xlab("Wine Quality ratings")+
+  ylab("Counts of wines")+
+  ggtitle("DIstribution of wines for each quality ratings")
+
+#Tabular representation of wine quality
+wine_quality<- table(red_df$quality) 
+wine_quality
+
+#Creating a categorical variable based on the clarity
+red_df$quality_category<-factor(ifelse(red_df$quality<=4,'Low',ifelse(red_df$quality>=6,"Good","Medium")),levels = c("Low","Medium","Good"))
+#Distribution of category variable.
+table(red_df$quality_category)
+
+# Number of wines for each quality category
+ggplot(red_df,aes(x=quality_category))+
+  geom_bar(stat="count",fill= "salmon4",colour = "black")
+
+#Histogram for pH of all the wines and Box plots for pH of all the wines to check if there are any outliers
+grid.arrange(ggplot(red_df,aes(x=pH))+
+  geom_histogram(bins=40,fill="grey70",colour="black")+
+               scale_x_continuous(breaks=seq(0,4,0.1))+
+               xlab('Ph content')+
+               ylab('Counts of wines')+
+               ggtitle('Distribution of wines based on ph content'),
+ggplot(red_df,aes(x=1,y=pH))+
+  geom_boxplot(alpha=0.2,fill = "turquoise2")+
+  xlab(" ")+
+  ylab("pH ")+
+  ggtitle("Boxplot for pH values"),ncol=2)
+
+#Distribution of alcohol content. 
+grid.arrange(ggplot(red_df,aes(x=alcohol))+
+               geom_histogram(bins=40,fill="orchid3",color="black")+
+               xlab("alcohol content")+
+               ylab("Number of wines")+
+               ggtitle("Distribution of alcohol content"),
+#Box plots for alcohol conetnt of all the wines to check if there are any outliers
+ggplot(red_df,aes(x=1,y=alcohol))+
+  geom_boxplot(fill = "turquoise3")+
+  ylab("alcohol content in [%]")+
+  xlab(" range")+
+  ggtitle("Box plot  of alcohol content"),ncol=2)
+
+#Summary of alcohol content in wines
+summary(red_df$alcohol)
+
+#Histogram to show the distribution of density
+grid.arrange(ggplot(red_df,aes(x=density))+
+  geom_histogram(bins=40,fill="coral1",colour = "black")+
+  xlab("Density")+
+  ylab("Number of wines")+
+  ggtitle("Distribution of wine Density"),
+#Box plot showing distribution of density 
+ggplot(red_df,aes(x=1,y=alcohol))+
+  geom_boxplot(fill="royalblue1",alpha=0.5)+
+  ylab("wine density in [g/cm^3]")+
+  xlab("Number of wines")+
+  ggtitle("Box plot  of wine density"),ncol=2)
+
+#sumary of wine desnity
+summary(red_df$density)  
+
+#distribution of fixed acidity 
+grid.arrange(ggplot(data=red_df,aes(x=fixed.acidity))+
+  geom_histogram(bins=40,fill="slateblue3",colour="black")+
+  xlab("fixed acidity values")+
+  ylab("Number of wines")+
+  ggtitle("Distribution of fixed acidity in wines"),
+#box plot distribution of fixed acidity 
+ggplot(data=red_df,aes(x=1,y=fixed.acidity))+
+  geom_boxplot(alpha=0.2,fill="darkgoldenrod2")+
+  ylab("fixed acidity in [g/dm^3]")+
+  xlab("")+
+  ggtitle("Box plot of fixed acidity in wines"),ncol=2)
+
+#Summary of fixed acidty content
+summary(red_df$fixed.acidity)
+
+#Distribution of volatile acidity in wines
+grid.arrange(ggplot(data=red_df,aes(x=volatile.acidity))+
+               geom_histogram(bins=40,fill="firebrick3",colour="black")+
+               scale_x_continuous(breaks = seq(0.1,1.6,0.1))+
+               ylab("Number of wines")+
+               ggtitle("Distribution of Volatile acidty in wines"),
+             #Box plot distribution of volatile acidty
+             ggplot(red_df,aes(x=1,y=volatile.acidity))+
+               geom_boxplot(fill="darkkhaki",alpha=0.5)+
+               ylab("volatile acidity in [g/dm^3]")+
+               xlab(" ")+
+               ggtitle("distribution of volatile acidity")
+             ,ncol=2)
+
+#summary of volatile acidty values
+summary(red_df$volatile.acidity)
+
+#Distribution of citric acid
+grid.arrange(ggplot(data=red_df,aes(x=citric.acid,bins=40))+
+               geom_histogram(bins=40,fill="darkcyan",colour="black")+
+               scale_x_continuous(breaks = seq(0,1,0.1))+
+               xlab('Ctiric acid content')+
+               ylab('Counts of wine')+
+               ggtitle('Distribution of citric acid content in wines')
+             ,#box plot distribution of citric acid
+             ggplot(data=red_df,aes(x=1,y=citric.acid))+
+               geom_boxplot(alpha=0.3,fill="blue")+
+               ylab('Ctiric acid content in  [g/dm^3]')+
+               xlab(" ")+
+               ggtitle('Boxplot of Distribution of citric acid content in wines')
+             ,ncol=2)
+
+#summary distribution of citric acid
+summary(red_df$citric.acid)
+
+#distribution of sugar content
+grid.arrange(ggplot(red_df,aes(x=residual.sugar))+
+               geom_histogram(bins=50,fill="peachpuff3",colour="black")+
+               scale_x_continuous(seq(0,60,1))+
+               xlab('Sugar content')+
+               ylab('Count of wines')+
+               ggtitle('Distribution of Sugar content in wines')
+             ,#box plot distribution of sugar content
+             ggplot(red_df,aes(x=1,y=residual.sugar))+
+               geom_boxplot(alpha=0.2,fill="firebrick1")+
+               ylab('Sugar content in  [g/dm^3]')+
+               xlab(' Range')+
+               ggtitle('Distribution of Sugar content in wines')
+             ,ncol=2)
+
+#summary of sugar content
+summary(red_df$residual.sugar)
+
+#Getting wines with highest sugar content
+high_sugar_content<- head(sort(table(red_df$residual.sugar),decreasing = TRUE),30)
+
+#Histogram for chlorides content
+grid.arrange(ggplot(red_df,aes(x=chlorides))+
+               geom_histogram(bins=50,fill="aquamarine",colour="black")+
+               xlab('chlorides content')+
+               ylab('counts of wines')+
+               ggtitle('Distribution of chlorides'),
+             #Boxplot for chlorides content
+             ggplot(red_df,aes(x=1,y=chlorides))+
+               geom_boxplot(alpha=0.3,fill= "darkolivegreen")+
+               ylab('chlorides content in  [g/dm^3]')+
+               xlab(' ')+
+               ggtitle('Box plot Distribution of chlorides')
+             ,ncol=2)
+
+#Summary of the chlorides content
+summary(red_df$chlorides)  
+
+# alcohol vs qulaity scatterplot
+ggplot(red_df,aes(x=factor(quality),y=alcohol))+
+  geom_jitter(alpha=0.5,color="purple",shape=21)+
+  geom_boxplot(alpha=0.15,fill="springgreen3")+
+  stat_summary(fun.y=mean,geom='point',shape=3,size=4,color='red')+
+  xlab("Qualiy of wines")+
+  ylab("alcohol")+
+  ggtitle("alcohol vs quality")
+#It can bee seen from that as the mean alcohol content increases the quality of alcohol increase . 
+#There is a slight dip in the alcohol content for wines with rating of 5 when compared with 4 - rated wines. 
+
+#pH vs quality 
+ggplot(red_df,aes(x=factor(quality),y= pH))+
+  geom_jitter(alpha=0.5,color="goldenrod2",shape=21)+
+  geom_boxplot(alpha=0.25,color="firebrick")+
+  xlab("Qualiy of wines")+
+  ylab("pH")+
+  ggtitle("pH vs quality")
+#The pH value seems to be constant for all qualities of wines.
+#There is only a slight difference in the mean pH value. 
+#It can be noticed that the pH value is lowest for wines 
+#with quality rating of 5 and the wines with quality rating of 3 
+#has the highest pH value.
+
+#Fixed acidity vs quality 
+ggplot(red_df,aes(x=factor(quality),y=fixed.acidity))+
+  geom_jitter(alpha=0.5,color="gold3",shape=21)+
+  geom_boxplot(alpha=0.5,color="cyan4")+
+  stat_summary(fun.y=mean,geom='point',shape=3,size=4,color='red')+
+  xlab("Quality of wines")+
+  ylab("Fixed acidty levels in gm/dm^3")+
+  ggtitle("Mean fixed acidity vs quality")
+
+#It can be seen that the mean fixed acidity levels are gradually increasing for wine quality of 4 till 7 
+#The mean fixed acidity levle of wines with quality rating of 8 is less.
+#Also, the least mean for fixed acidity is for the quality rating of 3.
+
+#linear model quality~alcohol
+m1<-lm(quality~alcohol,data=red_df)
+summary(m1)
+
+#comparing alcohol content vs density 
+#each point is denoted by the quality of the alcohol. 
+ggplot(red_df,aes(x=density,y=alcohol,color=factor(quality)))+
+  geom_point(alpha=0.8 , size=1)+
+  geom_smooth(method="lm",se=FALSE, size=1)+
+  scale_color_brewer(type='seq',guide=guide_legend(title='quality'))+
+  ggtitle("alcohol vs density grouped by wine quality")
+
+#It can be noticed that there is an inverse relationship between 
+#alcohol and density by looking at the regression line.
+#It be seen that most of the 5 and 6 quality wines are around the mean density and mean alcohol range.
+#The highest density wine and the lowest density wine has quality rating of 6.
+
+#Distribution of alcohol content. 
+ggplot(red_df,aes(x=alcohol))+
+  geom_histogram(bins=40,fill="brown3",color="black")+
+  xlab("alcohol[%]")+
+  ylab("Number of wines")+
+  ggtitle("Distribution of alcohol[%]")
+
+#it seems that around 50% of the wines have 
+#aclohol content of less than 10% and 
+#around 75% had less than 12% of alcohol.
+
+#Higher the alcohol content better the rating of the wine.#
+
+
+
+
+
